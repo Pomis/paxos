@@ -11,7 +11,7 @@
 start(Sleep) ->
   AcceptorNames = ["Acceptor a", "Acceptor b", "Acceptor c", "Acceptor d", 
                    "Acceptor e", "Acceptor f"],
-  AccRegister = [a, b, c, d, e],
+  AccRegister = [a, b, c, d, e, f],
   ProposerNames = [{"Proposer kurtz", ?RED}, 
                    {"Proposer kilgore", ?GREEN}, 
                    {"Proposer willard", ?BLUE},
@@ -29,7 +29,7 @@ start(Sleep) ->
   true.
 
 start() ->
-  Sleep = [1,1,1],
+  Sleep = [100,200,350,215,450],
   start(Sleep).
     
 start_acceptors(AccIds, AccReg) ->
