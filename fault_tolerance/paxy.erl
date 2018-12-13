@@ -81,7 +81,7 @@ crash(Name) ->
             Pn ! {updateAcc, "Voted: CRASHED", "Promised: CRASHED", {0,0,0}},
             dets:close(Name),
             unregister(Name),
-            exit(Pid, "crash"),
+            %exit(Pid, "crash"),
             timer:sleep(2000),
             register(Name, acceptor:start(Name, na))
     end.

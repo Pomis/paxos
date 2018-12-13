@@ -44,7 +44,7 @@ acceptor(Name, Promised, Voted, Value, PanelId) ->
                          "Promised: " ++ io_lib:format("~p", [Round]), Colour},
               if P2 =< ?drop ->
                 io:format("promise message from acceptor dropped~n"),
-               % paxy:crash(Name),
+                paxy:crash(Name),
                  acceptor(Name, Round, Voted, Value, PanelId);
                 true ->
                   Proposer ! {promise, Round, Voted, Value}, 
