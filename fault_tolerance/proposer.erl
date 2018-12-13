@@ -39,10 +39,10 @@ ballot(Name, Round, Proposal, Acceptors, PanelId) ->
                  [Name, Round, Value, Proposal]),
       % update gui
       PanelId ! {updateProp, "Round: " ++ io_lib:format("~p", [Round]), Value},
-      accept(Round, Proposal, Acceptors),
+      accept(Round, Value, Acceptors),
       case vote(Quorum, Round) of
         ok ->
-          {ok, Proposal};
+          {ok, Value};
         abort ->
           abort
       end;
