@@ -1,5 +1,8 @@
+
 -module(acceptor).
 -export([start/2]).
+-define(delay, 200).
+-define(drop, 1).
 
 start(Name, PanelId) ->
   spawn(fun() -> init(Name, PanelId) end).
@@ -13,21 +16,37 @@ init(Name, PanelId) ->
 acceptor(Name, Promised, Voted, Value, PanelId) ->
   receive
     {prepare, Proposer, Round} ->
-      case order:gr(Round, Promised) of
+      R1 = rand:uniform(?delay),
+      timer:sleep(R1),
+      P1 = rand:uniform(10),
+      if P1 =< ?drop ->
+          io:format("message from proposer dropped~n"),
+          acceptor(Name, Promised, Voted, Value, PanelId);
         true ->
-          Proposer ! {promise, Round, Voted, Value},               
-          io:format("[Acceptor ~w] Phase 1: promised ~w voted ~w colour ~w~n",
-                 [Name, Round, Voted, Value]),
-          % Update gui
-          Colour = case Value of na -> {0,0,0}; _ -> Value end,
-          PanelId ! {updateAcc, "Voted: " ++ io_lib:format("~p", [Voted]), 
-                     "Promised: " ++ io_lib:format("~p", [Round]), Colour},
-          acceptor(Name, Round, Voted, Value, PanelId);
-        false ->
-          Proposer ! {sorry, {prepare, Round}},
-          acceptor(Name, Promised, Voted, Value, PanelId)
+          case order:gr(Round, Promised) of
+            true ->
+            P2 = rand:uniform(10),
+              
+              io:format("[Acceptor ~w] Phase 1: promised ~w voted ~w colour ~w~n",
+                     [Name, Round, Voted, Value]),
+              % Update gui
+              Colour = case Value of na -> {0,0,0}; _ -> Value end,
+              PanelId ! {updateAcc, "Voted: " ++ io_lib:format("~p", [Voted]), 
+                         "Promised: " ++ io_lib:format("~p", [Round]), Colour},
+              %if P2 =< ?drop ->
+              %io:format("message from acceptor dropped~n");
+              %  true ->
+                  Proposer ! {promise, Round, Voted, Value}, 
+              %end;                          
+              acceptor(Name, Round, Voted, Value, PanelId);
+            false ->
+             % Proposer ! {sorry, {prepare, Round}},
+              acceptor(Name, Promised, Voted, Value, PanelId)
+          end
       end;
     {accept, Proposer, Round, Proposal} ->
+      R2 = rand:uniform(?delay),
+      timer:sleep(R2),
       case order:goe(Round, Promised) of
         true ->
           Proposer ! {vote, Round},
@@ -43,7 +62,7 @@ acceptor(Name, Promised, Voted, Value, PanelId) ->
               acceptor(Name, Promised, Voted, Value, PanelId)
           end;                            
         false ->
-          Proposer ! {sorry, {accept, Round}},
+          %Proposer ! {sorry, {accept, Round}},
           acceptor(Name, Promised, Voted, Value, PanelId)
       end;
     stop ->

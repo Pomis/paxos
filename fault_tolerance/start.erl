@@ -1,7 +1,6 @@
 -module(start).
--export([main/0]).
+-export([now/0]).
 
-main() ->
+now() ->
     paxy:stop(),
-    cover:compile_directory(),
-    paxy:start([256,189,523]).
+    paxy:start([0,200,400]).
