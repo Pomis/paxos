@@ -1,0 +1,11 @@
+erl
+cover:compile_directory(),
+paxy:start([643,1000,130]).
+
+erl -sname paxy-proposers 
+cover:compile_directory(),
+paxy:start_proposers([643,1000,130,444,555,666], 'paxy-acceptors@cod009').
+
+erl -sname paxy-acceptors
+cover:compile_directory(),
+paxy:start_acceptors().
