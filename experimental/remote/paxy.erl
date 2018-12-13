@@ -1,5 +1,5 @@
 -module(paxy).
--export([start_proposers/2, start_acceptors/0, stop/0, stop/1, crash/1]). 
+-export([start_proposers/2, start_acceptors/0, stop/0, stop/1]). 
 
 -define(RED, {255,0,0}). 
 -define(BLUE, {0,0,255}).
@@ -8,7 +8,7 @@
 
 % Entry point of the application. Sleep is a list with the initial sleep time for each proposer
 start_proposers(Sleep, AcceptorsNode) ->
-    %Node='paxy-acceptors@cod009',
+    %Node='paxy-acc@cod009',
     AccRegister = [{a, AcceptorsNode}, {b, AcceptorsNode},{c, AcceptorsNode},{d, AcceptorsNode},{e, AcceptorsNode}],
     PropInfo = [{kurtz, ?RED}, {kilgore, ?GREEN}, {willard, ?BLUE}],
     {gui, AcceptorsNode} ! {reqState, self()}, 
@@ -69,19 +69,4 @@ stop(Name) ->
         Pid ->
             pers:delete(Name),
             Pid ! stop
-    end.
-
-crash(Name) ->
-    case whereis(Name) of
-        undefined ->
-            ok;
-        Pid ->
-            pers:open(Name),
-            {_, _, _, Pn} = pers:read(Name),
-            Pn ! {updateAcc, "Voted: CRASHED", "Promised: CRASHED", {0,0,0}},
-            dets:close(Name),
-            unregister(Name),
-            exit(Pid, "crash"),
-            timer:sleep(2000),
-            register(Name, acceptor:start(Name, na))
     end.

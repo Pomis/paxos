@@ -10,8 +10,9 @@
 % Sleep is a list with the initial sleep time for each proposer
 start(Sleep) ->
   AcceptorNames = ["Acceptor a", "Acceptor b", "Acceptor c", "Acceptor d", 
-                   "Acceptor e", "Acceptor f"],
-  AccRegister = [a, b, c, d, e, f],
+                   "Acceptor e", "Acceptor f", "Acceptor g", "Acceptor h",
+                   "Acceptor i", "Acceptor j", "Acceptor k", "Acceptor l"],
+  AccRegister = [a, b, c, d, e, f, g, h, i, j, k, l],
   ProposerNames = [{"Proposer kurtz", ?RED}, 
                    {"Proposer kilgore", ?GREEN}, 
                    {"Proposer willard", ?BLUE},
